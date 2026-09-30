@@ -1,0 +1,9 @@
+/testset/
+/vendor/
+/node_modules/
+/coverage/
+/.build/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

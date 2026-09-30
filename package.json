@@ -1,0 +1,19 @@
+{
+  "name": "files_ublcii_viewer",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "build": "webpack --config webpack.js",
+    "dev": "webpack --config webpack.js --mode development"
+  },
+  "devDependencies": {
+    "webpack": "^5.109.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@nextcloud/files": "^4.0.0",
+    "@nextcloud/l10n": "^3.4.1",
+    "@nextcloud/router": "^3.1.0",
+    "qrcode": "1.5.4"
+  }
+}
