@@ -287,7 +287,7 @@
 
 @media (max-width: 700px) {
 	.ublcii-viewer { align-items: stretch; padding: 0; }
-	.ublcii-viewer__dialog { height: 100vh; max-height: 100vh; border-radius: 0; }
+	.ublcii-viewer__dialog { height: 100vh; height: 100dvh; max-height: 100vh; max-height: 100dvh; border-radius: 0; }
 	.ublcii-viewer__toolbar { padding-left: 16px; padding-right: 16px; }
 	.ublcii-viewer__layout {
 		display: flex;
@@ -486,18 +486,53 @@
 	color: var(--color-main-text, #222);
 }
 
+/* Adjustments: card layout on narrow screens (same approach as Lines). */
+.ublcii-viewer__adjustments-table .ublcii-viewer__line-label { display: none; }
+
 @media (max-width: 700px) {
-	.ublcii-viewer__panel[data-section-id="adjustments"] .ublcii-viewer__table {
-		min-width: 760px;
-		table-layout: auto;
+	.ublcii-viewer__adjustments-table { display: block; min-width: 0; }
+	.ublcii-viewer__adjustments-table thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
 	}
-	.ublcii-viewer__panel[data-section-id="adjustments"] .ublcii-viewer__table th,
-	.ublcii-viewer__panel[data-section-id="adjustments"] .ublcii-viewer__table td {
-		padding: 6px 3px;
+	.ublcii-viewer__adjustments-table tbody { display: block; }
+	.ublcii-viewer__adjustments-table tbody tr {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 8px 6px;
+		padding: 12px 0;
+		border-bottom: 1px solid var(--color-border, #ddd);
 	}
-	.ublcii-viewer__panel[data-section-id="adjustments"] .ublcii-viewer__badge {
-		max-width: 100%;
-		box-sizing: border-box;
-		padding: 2px 3px;
+	.ublcii-viewer__adjustments-table tbody td {
+		display: block;
+		min-width: 0;
+		width: auto;
+		padding: 0;
+		border: 0;
+		white-space: normal;
+		overflow-wrap: anywhere;
+		text-align: left;
 	}
+	.ublcii-viewer__adjustments-table tbody td:nth-child(-n+2) { grid-column: span 2; }
+	.ublcii-viewer__adjustments-table tbody td:nth-child(3) { grid-column: 1 / -1; font-weight: 600; }
+	.ublcii-viewer__adjustments-table .ublcii-viewer__line-label {
+		display: block;
+		color: var(--color-text-maxcontrast, #666);
+		font-size: 12px;
+		line-height: 1.3;
+		white-space: nowrap;
+	}
+}
+
+@media (max-width: 339px) {
+	.ublcii-viewer__adjustments-table tbody tr {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.ublcii-viewer__adjustments-table .ublcii-viewer__line-label { white-space: normal; }
 }

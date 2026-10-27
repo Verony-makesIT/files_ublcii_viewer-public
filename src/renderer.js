@@ -180,22 +180,44 @@ function renderAllowancesCharges(invoice) {
         { label: 'Amount', className: 'ublcii-viewer__number' },
         { label: 'VAT', className: 'ublcii-viewer__number' },
     ])
+    table.classList.add('ublcii-viewer__adjustments-table')
+    // Preserve table semantics when mobile CSS changes the visual layout.
+    table.setAttribute('role', 'table')
+    table.querySelector('thead').setAttribute('role', 'rowgroup')
+    table.querySelector('thead tr').setAttribute('role', 'row')
+    table.querySelectorAll('th').forEach(heading => {
+        heading.setAttribute('role', 'columnheader')
+        heading.setAttribute('scope', 'col')
+    })
     const body = element('tbody')
+    body.setAttribute('role', 'rowgroup')
+    const mobileLabels = ['Level', 'Type', 'Reason', 'Base', 'Rate', 'Amount', 'VAT']
 
     for (const item of entries) {
         const row = element('tr')
         appendCell(row, item.level === 'Line' && hasValue(item.lineId) ? `Line ${item.lineId}` : item.level)
         const typeCell = element('td')
-        const typeClass = item.type === 'Allowance' || item.type === 'Charge'
-            ? `ublcii-viewer__badge ublcii-viewer__badge--${item.type.toLowerCase()}`
+        const typeKey = String(item.type ?? '').toLowerCase()
+        const typeLabel = typeKey === 'allowance' ? 'Allowance'
+            : typeKey === 'charge' ? 'Charge' : null
+        const typeClass = typeLabel
+            ? `ublcii-viewer__badge ublcii-viewer__badge--${typeKey}`
             : 'ublcii-viewer__badge ublcii-viewer__badge--neutral'
-        typeCell.append(element('span', typeClass, hasValue(item.type) ? item.type : '—'))
+        typeCell.append(element('span', typeClass, typeLabel ?? (hasValue(item.type) ? item.type : '—')))
         row.append(typeCell)
         appendCell(row, item.reason || item.reasonCode)
         appendCell(row, withCurrency(item.baseAmount, invoice.currencyCode), 'ublcii-viewer__number')
         appendCell(row, hasValue(item.percentage) ? `${item.percentage}%` : null, 'ublcii-viewer__number')
         appendCell(row, withCurrency(item.amount, invoice.currencyCode), 'ublcii-viewer__number')
         appendCell(row, [item.vat?.categoryCode, hasValue(item.vat?.rate) ? `${item.vat.rate}%` : null].filter(hasValue).join(' / '), 'ublcii-viewer__number')
+        row.setAttribute('role', 'row')
+        Array.from(row.children).forEach((cell, index) => {
+            cell.setAttribute('role', 'cell')
+            const label = element('span', 'ublcii-viewer__line-label', mobileLabels[index])
+            // The column headers already provide these labels to screenreaders.
+            label.setAttribute('aria-hidden', 'true')
+            cell.prepend(label)
+        })
         body.append(row)
     }
     table.append(body)
